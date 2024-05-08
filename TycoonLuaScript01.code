@@ -1,0 +1,29 @@
+local Plots = game.Workspace.Plots
+
+-- Player joins the game
+game.Players.PlayerAdded:Connect(function(Player)
+	-- Get the Plot
+	for _, Plot in Plots:GetChildren() do
+		if Plot:GetAttribute("Taken") then continue end
+		-- Plot is not taken, so we want to take it
+		Plot:SetAttribute('Taken', true)
+		Plot:SetAttribute('Owner', Player.UserId)
+		print('Plot given to '..Player.Name..'!')
+		
+		break
+	end
+end)
+
+game.Players.PlayerRemoving:Connect(function(Player)
+	for _, Plot in Plots:GetChildren() do
+		if not Plot:GetAttribute('Owner') then continue end
+		-- The plot is owned by a player
+		if Plot:GetAttribute('Owner') ~= Player.UserId then continue end
+		-- We have found the correct plot
+		Plot:SetAttribute('Taken', nil)
+		Plot:SetAttribute('Owner', nil)
+		print('Plot removed from '..Player.Name..'!')
+		
+		break
+	end
+end)
